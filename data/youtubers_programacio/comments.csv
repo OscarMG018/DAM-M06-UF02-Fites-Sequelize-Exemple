@@ -1,0 +1,5 @@
+id,body,user_id,video_id
+1,Comentari 1 del Usuari 1,1,1
+2,Comentari 2 del Usuari 1,1,2
+3,Comentari 1 del Usuari 2,2,1
+4,Comentari 2 del Usuari 2,2,1

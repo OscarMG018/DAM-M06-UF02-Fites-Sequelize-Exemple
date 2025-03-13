@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/database');
+const Comentari = require('./Comment');
+const Valoration = require('./Valoration');
 
 const Video = sequelize.define('Video', {
     id: {
@@ -32,5 +34,7 @@ const Video = sequelize.define('Video', {
 }, {
     tableName: 'videos'
 });
+
+
 
 module.exports = Video;

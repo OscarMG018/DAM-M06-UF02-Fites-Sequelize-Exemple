@@ -15,7 +15,7 @@ const { sequelize } = require('./src/config/database');
 const { logger } = require('./src/config/logger');
 
 // Importar models
-const { Youtuber, PerfilYoutuber, Video, Categoria, VideosCategories } = require('./src/models');
+const { Youtuber, PerfilYoutuber, Video, Categoria, VideosCategories, User, Comment, Valoration } = require('./src/models');
 
 // Rutes als arxius CSV
 const BASE_PATH = path.join(__dirname, process.env.DATA_DIR_PATH, 'youtubers_programacio');
@@ -24,7 +24,10 @@ const CSV_FILES = {
   PERFILS: path.join(BASE_PATH, 'youtuber_profiles.csv'),
   CATEGORIES: path.join(BASE_PATH, 'categories.csv'),
   VIDEOS: path.join(BASE_PATH, 'videos.csv'),
-  VIDEOS_CATEGORIES: path.join(BASE_PATH, 'video_categories.csv')
+  VIDEOS_CATEGORIES: path.join(BASE_PATH, 'video_categories.csv'),
+  USERS: path.join(BASE_PATH, "users.csv"),
+  VALORATIONS: path.join(BASE_PATH, "valorations.csv"),
+  COMMENTS: path.join(BASE_PATH, "comments.csv"),
 };
 
 /**
@@ -181,6 +184,57 @@ async function carregarVideosCategories(videos_categories) {
   }
 }
 
+async function carregarUsuaris(usuaris) {
+  try {
+    logger.info(`Carregant ${usuaris.length} usuaris...`);
+    for (const usuari of usuaris) {
+      await User.create({
+        username: usuari.username,
+        email: usuari.email,
+        password: usuari.password,
+        nom: usuari.nom,
+        data_registre: usuari.data_registre,
+        idioma: usuari.idioma
+      });
+    }
+  } catch (error) {
+    logger.error("Error carregant usuaris:", error);
+    throw error;
+  }
+}
+
+async function carregarComentaris(comentaris) {
+  try {
+    logger.info(`Carregant ${comentaris.length} comentaris...`);
+    for (const comentari of comentaris) {
+      await Comment.create({
+        body: comentari.body,
+        user_id: comentari.user_id,
+        video_id: comentari.video_id
+      });
+    }
+  } catch (error) {
+    logger.error("Error carregant comentaris", error);
+    throw error;
+  }
+}
+
+async function carregarValoracions(valoracions) {
+  try {
+    logger.info(`Carregant ${valoracions.length} valoracions...`);
+    for (const valoracio of valoracions) {
+      await Valoration.create({
+        type: valoracio.type,
+        user_id: valoracio.user_id,
+        video_id:valoracio.video_id
+      })
+    }
+  } catch (error) {
+    logger.error("Error carregant valoracions", error);
+    throw error;
+  }
+}
+
 /**
  * Funció principal que coordina tot el procés de càrrega
  */
@@ -201,6 +255,10 @@ async function carregarTotesDades() {
     const categories = await llegirFitxerCsv(CSV_FILES.CATEGORIES);
     const videos = await llegirFitxerCsv(CSV_FILES.VIDEOS);
     const videos_categories = await llegirFitxerCsv(CSV_FILES.VIDEOS_CATEGORIES);
+    const usuaris = await llegirFitxerCsv(CSV_FILES.USERS);
+    const comentaris = await llegirFitxerCsv(CSV_FILES.COMMENTS);
+    console.log(comentaris);
+    const valoracions = await llegirFitxerCsv(CSV_FILES.VALORATIONS);
     
     // Carregar les dades en ordre per respectar dependències
     await carregarYoutubers(youtubers);
@@ -208,6 +266,9 @@ async function carregarTotesDades() {
     await carregarCategories(categories);
     await carregarVideos(videos);
     await carregarVideosCategories(videos_categories);
+    await carregarUsuaris(usuaris);
+    await carregarComentaris(comentaris);
+    await carregarValoracions(valoracions);
     
     logger.info("Totes les dades han estat carregades correctament a la base de dades!");
     

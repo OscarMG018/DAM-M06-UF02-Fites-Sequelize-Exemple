@@ -20,7 +20,10 @@ const CSV_FILES = {
     PROFILES: 'youtuber_profiles.csv',
     CATEGORIES: 'categories.csv',
     VIDEOS: 'videos.csv',
-    VIDEO_CATEGORIES: 'video_categories.csv'
+    VIDEO_CATEGORIES: 'video_categories.csv',
+    COMMENTS: 'comments.csv',
+    USERS: 'users.csv',
+    VALIDATIONS: 'validations.csv'
 };
 
 /**
@@ -32,7 +35,10 @@ const TABLE_STRUCTURE = {
     profiles: ['id', 'youtuber_id', 'twitter_url', 'instagram_url', 'website_url', 'contact_info'],
     categories: ['id', 'name', 'description'],
     videos: ['id', 'youtuber_id', 'title', 'description', 'video_url', 'publication_date', 'views', 'likes'],
-    video_categories: ['video_id', 'category_id']
+    video_categories: ['video_id', 'category_id'],
+    comments: ["id","body","user_id","video_id"],
+    users: ["id","username","email","password","nom","data_registre","idioma"],
+    validations: ["id","type","user_id","video_id"]
 };
 
 /**
